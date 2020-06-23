@@ -13,16 +13,29 @@ public class PeopleFarAttack : PeopleTrack
 
     protected override void Start()
     {
+        base.Start();
+
         agent.stoppingDistance = stop;                  // 代理器.停止距離 = 停止距離
         target = GameObject.Find("殭屍").transform;      // 目標 = 殭屍
     }
 
+    /*
     protected override void Track()
     {
+        if (target == null) return;                     // 如果 目標 為 空值 跳出
+
         agent.SetDestination(target.position);
         transform.LookAt(target);                       // 變形.看著(目標)
 
         if (agent.remainingDistance <= stop) Attack();  // 如果 代理器.距離 < 停止距離 就 攻擊
+    }
+    */
+
+    protected override void Update()
+    {
+        Track("警察", "平民");
+
+        if (agent.remainingDistance <= stop && min != 999) Attack();  // 如果 代理器.距離 < 停止距離 就 攻擊
     }
 
     /// <summary>
@@ -31,6 +44,7 @@ public class PeopleFarAttack : PeopleTrack
     private void Attack()
     {
         timer += Time.deltaTime;        // 計時器 累加 時間
+        transform.LookAt(target);                       // 變形.看著(目標)
 
         // 如果 計時器 >= 冷卻時間
         if (timer >= cd)

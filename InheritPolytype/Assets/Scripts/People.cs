@@ -19,6 +19,8 @@ public class People : MonoBehaviour
     /// </summary>
     protected Animator ani;
 
+    protected bool dead;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();       // 取得元件<代理器>
@@ -32,6 +34,7 @@ public class People : MonoBehaviour
     /// </summary>
     public void Dead()
     {
+        dead = true;
         ani.SetTrigger("死亡");         // 動畫控制器.設定觸發("死亡")
         agent.isStopped = true;         // 停止導覽
         Destroy(gameObject, 1.5f);      // 刪除(遊戲物件，秒數)
