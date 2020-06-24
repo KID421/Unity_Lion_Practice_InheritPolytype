@@ -24,6 +24,8 @@ public class PeopleRun : People
     /// </summary>
     private void Flee()
     {
+        if (dead) return;
+
         if (agent.remainingDistance < 1.5f)
         {
             // 隨機座標 = 隨機.球內隨機點 * 半徑 + 中心點

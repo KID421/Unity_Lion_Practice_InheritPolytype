@@ -31,20 +31,24 @@ public class PeopleTrack : People
         agent.SetDestination(Vector3.zero);
     }
 
-    private void Update()
+    protected virtual void Update()
     {
-        Track();
+        if (dead) return;
+        Track("殭屍", "");
+        if (agent.remainingDistance <= 1f) HitPeople(); // 判斷 距離 < 1 傷害人類
     }
 
     /// <summary>
     /// 追蹤方法
     /// </summary>
-    protected virtual void Track()
+    protected virtual void Track(string trackA, string trackB)
     {
+        if (dead) return;
+
         // 儲存所有人跟此物件的距離
         for (int i = 0; i < people.Length; i++)
         {
-            if (people[i] == null || people[i].transform.name == "殭屍" || people[i].transform.name == "警察")
+            if (people[i] == null || people[i].transform.tag == trackA || people[i].transform.tag == trackB)
             {
                 distance[i] = 999;      // 與殭屍物件的距離改為 999
                 continue;               // 繼續 - 跳過並執行下一次迴圈
@@ -53,12 +57,11 @@ public class PeopleTrack : People
         }
         // 判斷最近
         float min = distance.Min();                     // 最小值 = 距離.最小值
+        if (min == 999) return;
         int index = distance.ToList().IndexOf(min);     // 索引值 = 距離.轉清單.取得索引值(最小值)
         target = people[index].transform;               // 目標 = 人類[索引值].變形
         // 追蹤最近目標
         agent.SetDestination(target.position);
-
-        if (agent.remainingDistance <= 1f) HitPeople(); // 判斷 距離 < 1 傷害人類
     }
 
     private float timer;
@@ -69,9 +72,10 @@ public class PeopleTrack : People
     private void HitPeople()
     {
         timer += Time.deltaTime;
-        if (timer >= 1)
+        if (timer >= 0.7f)
         {
             timer = 0;
+            ani.SetTrigger("攻擊");
             agent.isStopped = true;
             target.GetComponent<People>().Dead();
         }
