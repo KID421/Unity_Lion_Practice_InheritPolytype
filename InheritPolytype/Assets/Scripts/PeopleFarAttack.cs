@@ -16,7 +16,6 @@ public class PeopleFarAttack : PeopleTrack
         base.Start();
 
         agent.stoppingDistance = stop;                  // 代理器.停止距離 = 停止距離
-        target = GameObject.Find("殭屍").transform;      // 目標 = 殭屍
     }
 
     /*
@@ -49,11 +48,13 @@ public class PeopleFarAttack : PeopleTrack
         // 如果 計時器 >= 冷卻時間
         if (timer >= cd)
         {
+            aud.PlayOneShot(soundAttack, volumeAttack);
             timer = 0;                  // 計時器歸零
             ani.SetTrigger("攻擊");                                                                                                     // 攻擊動畫
             GameObject temp = Instantiate(bullet, transform.position + transform.forward + transform.up, transform.rotation);           // 生成子彈
             Rigidbody rig = temp.AddComponent<Rigidbody>();                                                                             // 添加元件
             rig.AddForce(transform.forward * 1500);                                                                                     // 子彈添加推力
+            Destroy(temp, 1);
         }
     }
 }

@@ -21,6 +21,9 @@ public class PeopleTrack : People
     /// </summary>
     public float[] distance;
 
+    public AudioClip soundAttack;
+    public float volumeAttack;
+
     protected virtual void Start()
     {
         // 人類陣列 = 透過類型尋找物件<泛型>()
@@ -73,8 +76,9 @@ public class PeopleTrack : People
     /// </summary>
     private void HitPeople()
     {
-        if (timerHit >= 1f)                            // 如果 時間 >= 1秒
+        if (timerHit >= 0.8f)                            // 如果 時間 >= 1秒
         {
+            aud.PlayOneShot(soundAttack, volumeAttack);
             timerHit = 0;                              // 計時器 歸零
             agent.isStopped = true;                 // 代理器 停止
             ani.SetTrigger("攻擊");                  // 攻擊
@@ -91,6 +95,7 @@ public class PeopleTrack : People
     {
         if (other.tag == "火球")
         {
+            Destroy(other.gameObject);
             Dead();
         }
     }

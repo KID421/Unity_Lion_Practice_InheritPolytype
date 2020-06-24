@@ -21,8 +21,16 @@ public class People : MonoBehaviour
 
     protected bool dead;
 
+    public int index;
+
+    protected AudioSource aud;
+
+    public float volume = 1;
+    public AudioClip soundDead;
+
     private void Awake()
     {
+        aud = GetComponent<AudioSource>();
         agent = GetComponent<NavMeshAgent>();       // 取得元件<代理器>
         ani = GetComponent<Animator>();             // 取得元件<動畫控制器>
 
@@ -34,9 +42,13 @@ public class People : MonoBehaviour
     /// </summary>
     public void Dead()
     {
+        if (dead) return;
+        aud.PlayOneShot(soundDead, volume);
         dead = true;
         ani.SetTrigger("死亡");         // 動畫控制器.設定觸發("死亡")
         agent.isStopped = true;         // 停止導覽
         Destroy(gameObject, 1.5f);      // 刪除(遊戲物件，秒數)
+
+        FindObjectOfType<SpawnManager>().UpdateText(index, 1);
     }
 }
